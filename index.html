@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Edge Engine — a quantitative wagering research terminal</title>
+<meta name="description" content="An interactive terminal for the mathematics of a proprietary betting syndicate: devigging, rating models, Plackett-Luce exotics, Kelly staking, pari-mutuel game theory and bankroll simulation." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0D13; --panel:#121826; --panel-2:#0E1420; --well:#161D2C;
+  --line:#222B3D; --line-2:#2C3852;
+  --text:#E7ECF6; --muted:#8893A8; --faint:#5C6679;
+  --amber:#FFB020; --amber-dim:#A8741B;       /* model / the edge — tote-board */
+  --market:#6E8AE6;                            /* the crowd / market */
+  --pos:#3FCB7F; --neg:#FF5A72;
+  --grid:#1B2333;
+  --r:10px;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(255,176,32,.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, rgba(110,138,230,.07), transparent 55%),
+    var(--ink);
+  color:var(--text);font-family:var(--body);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.tnum{font-variant-numeric:tabular-nums}
+a{color:var(--amber);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+
+/* ---------- top bar ---------- */
+.bar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(10,13,19,.78);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:16px;height:60px}
+.mark{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:700;
+  letter-spacing:.02em;font-size:17px}
+.mark svg{display:block}
+.mark b{color:var(--amber)}
+.bar .tag{color:var(--muted);font-size:12.5px;border-left:1px solid var(--line);
+  padding-left:16px}
+.bar .live{margin-left:auto;display:flex;gap:18px;font-family:var(--mono);font-size:12px}
+.bar .live div{color:var(--faint)}
+.bar .live b{color:var(--text);font-weight:600}
+@media(max-width:720px){.bar .tag{display:none}.bar .live{gap:12px}}
+
+/* ---------- hero ---------- */
+.hero{padding:70px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:18px}
+.hero h1{font-family:var(--disp);font-weight:700;font-size:clamp(34px,5.4vw,60px);
+  line-height:1.04;letter-spacing:-.015em;margin:0 0 18px;max-width:16ch}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero p.lede{font-size:18px;color:var(--muted);max-width:62ch;margin:0 0 34px}
+.hero .lede b{color:var(--text);font-weight:500}
+.herometrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.herometrics .m{background:var(--panel);padding:16px 18px}
+.herometrics .m .k{font-family:var(--mono);font-size:11px;color:var(--faint);
+  text-transform:uppercase;letter-spacing:.1em}
+.herometrics .m .v{font-family:var(--disp);font-weight:600;font-size:23px;margin-top:6px}
+@media(max-width:720px){.herometrics{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- sections ---------- */
+section{padding:46px 0;border-bottom:1px solid var(--line)}
+.shead{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.snum{font-family:var(--mono);font-size:13px;color:var(--amber);font-weight:600;
+  padding-top:3px}
+.shead h2{font-family:var(--disp);font-weight:600;font-size:25px;letter-spacing:-.01em;margin:0}
+.skick{color:var(--muted);max-width:74ch;margin:0 0 26px;font-size:14.5px}
+.skick code{font-family:var(--mono);font-size:13px;background:var(--well);
+  padding:1px 6px;border-radius:5px;color:var(--amber)}
+
+/* panels / grid */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px}
+.cols{display:grid;gap:18px}
+.cols.c2{grid-template-columns:340px 1fr}
+.cols.c2b{grid-template-columns:1fr 1fr}
+@media(max-width:860px){.cols.c2,.cols.c2b{grid-template-columns:1fr}}
+
+/* controls */
+.ctl{margin-bottom:18px}
+.ctl:last-child{margin-bottom:0}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:500}
+.ctl label .val{font-family:var(--mono);color:var(--amber);font-size:13px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;
+  background:var(--line-2);border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
+  border-radius:50%;background:var(--amber);cursor:pointer;border:2px solid var(--ink);
+  box-shadow:0 0 0 1px var(--amber-dim)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;
+  background:var(--amber);cursor:pointer;border:2px solid var(--ink)}
+.seg{display:flex;background:var(--well);border:1px solid var(--line);border-radius:8px;
+  padding:3px;gap:3px}
+.seg button{flex:1;background:transparent;border:0;color:var(--muted);font-family:var(--mono);
+  font-size:12px;padding:7px 4px;border-radius:6px;cursor:pointer;transition:.12s}
+.seg button[aria-pressed=true]{background:var(--amber);color:#1a1205;font-weight:600}
+.seg button:hover:not([aria-pressed=true]){color:var(--text)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+th{text-align:right;color:var(--faint);font-weight:500;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.08em;padding:0 0 9px;border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+td{text-align:right;padding:7px 0;border-bottom:1px solid var(--grid)}
+td:first-child{text-align:left;color:var(--text)}
+tbody tr:last-child td{border-bottom:0}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.dim{color:var(--faint)}
+
+/* editable race table */
+.rtable input{background:var(--well);border:1px solid var(--line);color:var(--text);
+  font-family:var(--mono);font-size:12.5px;border-radius:6px;padding:6px 8px;width:100%;
+  text-align:right}
+.rtable input.name{text-align:left}
+.rtable input:focus{outline:none;border-color:var(--amber)}
+.rtable td{padding:5px 5px 5px 0;border-bottom:0}
+.rtable .x{background:none;border:0;color:var(--faint);cursor:pointer;font-size:15px;
+  padding:0 4px}
+.rtable .x:hover{color:var(--neg)}
+.rowbtns{display:flex;gap:10px;margin-top:14px}
+.btn{background:var(--well);border:1px solid var(--line);color:var(--text);
+  font-family:var(--mono);font-size:12px;padding:8px 14px;border-radius:7px;cursor:pointer}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+.btn.amber{background:var(--amber);color:#1a1205;border-color:var(--amber);font-weight:600}
+
+/* legend + chips */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);
+  font-family:var(--mono);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:2px;display:inline-block}
+.note{font-size:12.5px;color:var(--muted);margin-top:14px;padding-left:13px;
+  border-left:2px solid var(--line-2)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:var(--well);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-family:var(--mono);font-size:10px;color:var(--faint);text-transform:uppercase;
+  letter-spacing:.08em}
+.kpi .v{font-family:var(--disp);font-weight:600;font-size:20px;margin-top:4px}
+svg.chart{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--mono)}
+
+footer{padding:44px 0 70px}
+footer .refs{font-size:12.5px;color:var(--muted);font-family:var(--mono);line-height:1.9}
+footer h3{font-family:var(--disp);font-size:15px;margin:0 0 14px;color:var(--text)}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:34px}
+@media(max-width:720px){.foot-grid{grid-template-columns:1fr}}
+.disclaimer{margin-top:30px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--line);
+  padding-top:18px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}}
+.barfill{transition:width .35s cubic-bezier(.2,.7,.2,1)}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <div class="mark">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <rect x="1" y="13" width="4" height="8" rx="1" fill="#6E8AE6"/>
+      <rect x="7" y="8" width="4" height="13" rx="1" fill="#8893A8"/>
+      <rect x="13" y="3" width="4" height="18" rx="1" fill="#FFB020"/>
+      <circle cx="19" cy="3" r="2.4" fill="#FFB020"/>
+    </svg>
+    EDGE&nbsp;<b>ENGINE</b>
+  </div>
+  <div class="tag">Quantitative wagering research terminal</div>
+  <div class="live">
+    <div>BOOK <b id="liveBook" class="tnum">—</b></div>
+    <div>OVERROUND <b id="liveOR" class="tnum">—</b></div>
+    <div>RUNNERS <b id="liveN" class="tnum">—</b></div>
+  </div>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Racing &amp; sports · syndicate side · model → price → size</div>
+  <h1>An edge is a <em>disagreement</em> with the market, priced.</h1>
+  <p class="lede">A bookmaker sells you a margin. A syndicate does the opposite: it builds an
+  <b>independent probability</b>, finds where the market is wrong, and stakes the gap.
+  This terminal runs that whole pipeline live — strip the vig, rate the field,
+  price the exotics, size with Kelly, and account for the fact that in a pool
+  <b>your own money moves the odds</b>. Edit the race below; every number recomputes.</p>
+  <div class="herometrics" id="heroMetrics"></div>
+</div></header>
+
+<main class="wrap">
+
+<!-- RACE EDITOR -->
+<section id="race">
+  <div class="shead"><div class="snum">00</div><h2>The race</h2></div>
+  <p class="skick">One shared object drives the whole terminal: a field of runners, each with
+  <b style="color:var(--amber)">your rating</b> (a speed figure / model score) and the
+  <b style="color:var(--market)">market's decimal odds</b>. Everything downstream reads from here.</p>
+  <div class="panel">
+    <table class="rtable"><thead><tr>
+      <th>#</th><th style="text-align:left">Runner</th>
+      <th style="color:var(--amber)">Rating</th>
+      <th style="color:var(--market)">Odds</th><th></th>
+    </tr></thead><tbody id="raceBody"></tbody></table>
+    <div class="rowbtns">
+      <button class="btn" id="addRow">+ Add runner</button>
+      <button class="btn" id="resetRace">Reset sample race</button>
+    </div>
+  </div>
+</section>
+
+<!-- 01 DEVIG -->
+<section id="devig">
+  <div class="shead"><div class="snum">01</div><h2>Strip the margin</h2></div>
+  <p class="skick">Implied probabilities <code>1/odds</code> sum to more than one — the excess is the
+  <b>overround</b>. Removing it recovers the market's view, but <b>how</b> you remove it matters on
+  lopsided books. <code>Shin</code> models a share of insider money and corrects the
+  favourite-longshot bias endogenously.</p>
+  <div class="cols c2">
+    <div class="panel">
+      <div class="ctl"><label>Devig method <span class="val" id="devigZ"></span></label>
+        <div class="seg" id="devigSeg">
+          <button data-m="multiplicative" aria-pressed="true">mult</button>
+          <button data-m="additive">add</button>
+          <button data-m="power">power</button>
+          <button data-m="shin">shin</button>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Booksum</div><div class="v tnum" id="kBook">—</div></div>
+        <div class="kpi"><div class="k">Overround</div><div class="v tnum" id="kOR">—</div></div>
+        <div class="kpi"><div class="k">Methods agree?</div><div class="v tnum" id="kSpread">—</div></div>
+      </div>
+      <p class="note" id="devigNote"></p>
+    </div>
+    <div class="panel">
+      <div id="devigChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--line-2)"></i>raw implied (with vig)</span>
+        <span><i class="dot" style="background:var(--amber)"></i>fair (devigged)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 RATINGS -->
+<section id="model">
+  <div class="shead"><div class="snum">02</div><h2>Your opinion</h2></div>
+  <p class="skick">Ratings become probabilities through a tempered softmax (multinomial-logit / Luce choice):
+  <code>p_i = e^(β·r_i) / Σ e^(β·r_j)</code>. <b>β</b> is conviction — flat field at 0, all-in on the
+  top rating as β grows. Then shrink toward the crowd, because a lone opinion is noisy.</p>
+  <div class="cols c2">
+    <div class="panel">
+      <div class="ctl"><label>Conviction β <span class="val" id="betaV"></span></label>
+        <input type="range" id="beta" min="0" max="0.2" step="0.002" value="0.085"></div>
+      <div class="ctl"><label>Shrink to market <span class="val" id="blendV"></span></label>
+        <input type="range" id="blend" min="0" max="1" step="0.02" value="0"></div>
+      <p class="note">At 0% shrink you bet pure model. Pushing right blends your
+      probabilities geometrically toward the devigged market — the same move a desk makes
+      before firing, trading edge for robustness.</p>
+    </div>
+    <div class="panel">
+      <div id="modelChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--market)"></i>market (devigged)</span>
+        <span><i class="dot" style="background:var(--amber)"></i>your model</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 EXOTICS -->
+<section id="exotics">
+  <div class="shead"><div class="snum">03</div><h2>Price the exotics</h2></div>
+  <p class="skick">Win probabilities imply the <b>whole finishing order</b> via Harville / Plackett-Luce:
+  draw each place proportional to remaining strength. Harville over-rates the favourite's place
+  chance, so a discount exponent <code>λ&lt;1</code> flattens the back end toward Henery/Stern.</p>
+  <div class="cols c2">
+    <div class="panel">
+      <div class="ctl"><label>Discount λ <span class="val" id="lamV"></span></label>
+        <input type="range" id="lam" min="0.4" max="1" step="0.02" value="0.9"></div>
+      <div id="placeChart"></div>
+      <div class="legend"><span><i class="dot" style="background:var(--amber)"></i>place (top-3) probability</span></div>
+    </div>
+    <div class="panel">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;
+        letter-spacing:.08em;margin-bottom:12px">Exacta matrix — P(row 1st, col 2nd)</div>
+      <div id="exactaGrid"></div>
+      <p class="note">Darker cells are the most likely 1-2 finishes — the raw material for
+      pricing exacta, trifecta and first-four pools off a single win model.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 EDGE & KELLY -->
+<section id="kelly">
+  <div class="shead"><div class="snum">04</div><h2>Find the edge, size the bet</h2></div>
+  <p class="skick">Edge is <code>p·odds − 1</code>. Stake the growth-optimal Kelly fraction
+  <code>(p·o−1)/(o−1)</code> — but only a slice of it, because <b>p is an estimate</b>. Bets clear
+  a minimum edge or they don't fire.</p>
+  <div class="cols c2">
+    <div class="panel">
+      <div class="ctl"><label>Kelly fraction <span class="val" id="kfracV"></span></label>
+        <input type="range" id="kfrac" min="0.1" max="1" step="0.05" value="0.25"></div>
+      <div class="ctl"><label>Minimum edge to fire <span class="val" id="minedgeV"></span></label>
+        <input type="range" id="minedge" min="0" max="0.1" step="0.005" value="0.02"></div>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Bets firing</div><div class="v tnum" id="kBets">—</div></div>
+        <div class="kpi"><div class="k">Total stake</div><div class="v tnum" id="kStake">—</div></div>
+        <div class="kpi"><div class="k">Book edge</div><div class="v tnum" id="kBookEdge">—</div></div>
+      </div>
+      <p class="note">Total stake is the summed Kelly fraction of bankroll across every firing
+      runner. Green bars below are +EV disagreements; red is where the market is sharper than you.</p>
+    </div>
+    <div class="panel">
+      <div id="edgeChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--pos)"></i>+EV (bet)</span>
+        <span><i class="dot" style="background:var(--neg)"></i>−EV (pass)</span>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <table><thead><tr><th>Runner</th><th>Odds</th><th>Market p</th><th>Model p</th>
+      <th>Fair odds</th><th>Edge</th><th>Kelly</th><th>Fire</th></tr></thead>
+      <tbody id="cardBody"></tbody></table>
+  </div>
+</section>
+
+<!-- 05 PARI-MUTUEL -->
+<section id="pool">
+  <div class="shead"><div class="snum">05</div><h2>The pool fights back</h2></div>
+  <p class="skick">Against a tote, the dividend is set by where the money lands —
+  <code>D(s) = (1−t)(T+s)/(W+s)</code> — so <b>your own stake dilutes your own price</b>. There is a
+  finite optimal bet where the marginal edge hits zero. This is the game-theoretic core of pool
+  betting, and why naive fixed-odds Kelly over-bets.</p>
+  <div class="cols c2">
+    <div class="panel">
+      <div class="ctl"><label>Runner <span class="val" id="poolRunnerV"></span></label>
+        <div class="seg" id="poolRunnerSeg" style="flex-wrap:wrap"></div></div>
+      <div class="ctl"><label>Total pool (T) <span class="val" id="poolTV"></span></label>
+        <input type="range" id="poolT" min="10000" max="500000" step="10000" value="120000"></div>
+      <div class="ctl"><label>Takeout (t) <span class="val" id="poolTakeV"></span></label>
+        <input type="range" id="poolTake" min="0.05" max="0.25" step="0.01" value="0.16"></div>
+      <div class="ctl"><label>Bankroll (B) <span class="val" id="poolBV"></span></label>
+        <input type="range" id="poolB" min="5000" max="200000" step="5000" value="40000"></div>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Naive Kelly $</div><div class="v tnum" id="poolNaive">—</div></div>
+        <div class="kpi"><div class="k">Impact-aware $</div><div class="v tnum" id="poolOpt">—</div></div>
+        <div class="kpi"><div class="k">Dividend taken</div><div class="v tnum" id="poolDiv">—</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div id="poolChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--amber)"></i>log-growth</span>
+        <span><i class="dot" style="background:var(--market)"></i>dividend</span>
+        <span><i class="dot" style="background:var(--pos)"></i>impact-aware optimum</span>
+        <span><i class="dot" style="background:var(--faint)"></i>naive Kelly</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 BANKROLL + CLV -->
+<section id="bankroll">
+  <div class="shead"><div class="snum">06</div><h2>Survive the variance</h2></div>
+  <p class="skick">A real edge still loses for weeks. Monte-Carlo a season at your edge and Kelly
+  fraction to see the growth <b>and</b> the drawdowns. The honest scoreboard isn't short-run P&amp;L —
+  it's <b>Closing Line Value</b>: beat the closing price and the profit follows.</p>
+  <div class="cols c2">
+    <div class="panel">
+      <div class="ctl"><label>Edge per bet <span class="val" id="mcEdgeV"></span></label>
+        <input type="range" id="mcEdge" min="0.005" max="0.08" step="0.005" value="0.03"></div>
+      <div class="ctl"><label>Avg odds <span class="val" id="mcOddsV"></span></label>
+        <input type="range" id="mcOdds" min="1.5" max="8" step="0.1" value="3"></div>
+      <div class="ctl"><label>Kelly fraction <span class="val" id="mcFracV"></span></label>
+        <input type="range" id="mcFrac" min="0.1" max="1" step="0.05" value="0.25"></div>
+      <div class="ctl"><label>Bets in season <span class="val" id="mcNV"></span></label>
+        <input type="range" id="mcN" min="100" max="2000" step="100" value="600"></div>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Median return</div><div class="v tnum" id="mcMed">—</div></div>
+        <div class="kpi"><div class="k">5th pct</div><div class="v tnum" id="mcP5">—</div></div>
+        <div class="kpi"><div class="k">Hit ≤50% bank</div><div class="v tnum" id="mcRuin">—</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div id="mcChart"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--amber)"></i>median</span>
+        <span><i class="dot" style="background:rgba(255,176,32,.18)"></i>5–95th percentile</span>
+        <span><i class="dot" style="background:var(--faint)"></i>starting bank</span>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <div class="cols c2b">
+      <div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;
+          letter-spacing:.08em;margin-bottom:14px">Closing Line Value — the real scoreboard</div>
+        <div class="ctl"><label>Odds you took <span class="val" id="clvTakeV"></span></label>
+          <input type="range" id="clvTake" min="1.5" max="6" step="0.05" value="3.2"></div>
+        <div class="ctl"><label>Closing odds <span class="val" id="clvCloseV"></span></label>
+          <input type="range" id="clvClose" min="1.5" max="6" step="0.05" value="3"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center">
+        <div class="kpi" style="margin-bottom:10px"><div class="k">Closing Line Value</div>
+          <div class="v tnum" id="clvVal">—</div></div>
+        <p class="note" style="margin-top:0" id="clvNote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <div class="foot-grid">
+    <div>
+      <h3>What's under the hood</h3>
+      <p style="color:var(--muted);font-size:14px;max-width:60ch">Every number on this page is computed
+      live in the browser from the same equations as the tested Python core that ships with the repo
+      (<code style="font-family:var(--mono);font-size:12px">core/</code> + <code style="font-family:var(--mono);font-size:12px">tests/</code>,
+      25 property tests). No data is sent anywhere; the terminal runs offline. Built as a study of the
+      mathematics a proprietary syndicate uses to find and size an edge.</p>
+    </div>
+    <div>
+      <h3>Models referenced</h3>
+      <div class="refs">
+        Shin (1992) — insider devig &amp; FL-bias<br>
+        Harville (1973) — order statistics<br>
+        Plackett (1975) / Luce (1959) — ranking<br>
+        Henery (1981), Stern (1990) — refinements<br>
+        Kelly (1956) — growth-optimal staking<br>
+        Clarke, Kovalchik &amp; Ingram (2017) — overround
+      </div>
+    </div>
+  </div>
+  <p class="disclaimer">Educational and illustrative only. Models are simplified; markets are not.
+  Nothing here is betting, financial or investment advice. Gamble responsibly — in Australia, support
+  is available at Gambling Help Online (1800 858 858).</p>
+</div></footer>
+
+<script>
+"use strict";
+/* ============================================================= *
+ *  MATH CORE  (mirrors the tested Python package in /core)      *
+ * ============================================================= */
+const M = {
+  impliedProbs:o=>o.map(x=>1/x),
+  booksum:o=>o.reduce((s,x)=>s+1/x,0),
+  devigMult(o){const pi=M.impliedProbs(o),s=pi.reduce((a,b)=>a+b,0);return pi.map(p=>p/s);},
+  devigAdd(o){const pi=M.impliedProbs(o),n=pi.length,ex=(pi.reduce((a,b)=>a+b,0)-1)/n;
+    let p=pi.map(x=>Math.max(x-ex,1e-9));const s=p.reduce((a,b)=>a+b,0);return p.map(x=>x/s);},
+  devigPower(o){const pi=M.impliedProbs(o);const S=k=>pi.reduce((a,p)=>a+Math.pow(p,k),0);
+    let lo=1,hi=1;while(S(hi)>1&&hi<1e6)hi*=2;
+    for(let i=0;i<200;i++){const m=(lo+hi)/2;if(S(m)>1)lo=m;else hi=m;}
+    const k=(lo+hi)/2;return pi.map(p=>Math.pow(p,k));},
+  shinProbs(pi,z){const s=pi.reduce((a,b)=>a+b,0);
+    return pi.map(p=>(Math.sqrt(z*z+4*(1-z)*p*p/s)-z)/(2*(1-z)));},
+  devigShin(o){const pi=M.impliedProbs(o);const tot=z=>M.shinProbs(pi,z).reduce((a,b)=>a+b,0);
+    let lo=0,hi=1-1e-9;for(let i=0;i<200;i++){const m=(lo+hi)/2;if(tot(m)>1)lo=m;else hi=m;}
+    const z=(lo+hi)/2,p=M.shinProbs(pi,z),s=p.reduce((a,b)=>a+b,0);return{p:p.map(x=>x/s),z};},
+  devig(o,m){if(m==='multiplicative')return M.devigMult(o);if(m==='additive')return M.devigAdd(o);
+    if(m==='power')return M.devigPower(o);return M.devigShin(o).p;},
+  softmax(r,beta){const mx=Math.max(...r),e=r.map(x=>Math.exp(beta*(x-mx))),s=e.reduce((a,b)=>a+b,0);
+    return e.map(x=>x/s);},
+  blend(model,market,w){const raw=model.map((m,i)=>Math.pow(m,w)*Math.pow(market[i],1-w));
+    const s=raw.reduce((a,b)=>a+b,0);return raw.map(x=>x/s);},
+  exacta(win,i,j,lam){if(i===j)return 0;const st=win.map(p=>Math.pow(p,lam));
+    const V=st.reduce((a,b)=>a+b,0);return win[i]*(st[j]/(V-st[i]));},
+  positionProbs(win,i,places,lam){const n=win.length,st=win.map(p=>Math.pow(p,lam));
+    const total=st.reduce((a,b)=>a+b,0),res=new Array(places).fill(0);
+    function rec(used,depth,prob,rem){for(let c=0;c<n;c++){if(used&(1<<c))continue;
+      const step=depth===0?win[c]:(rem>0?st[c]/rem:0),np=prob*step;
+      if(c===i){res[depth]+=np;}
+      else if(depth+1<places){const nrem=depth===0?(total-st[c]):(rem-st[c]);
+        rec(used|(1<<c),depth+1,np,nrem);}}}
+    rec(0,0,1,total);return res;},
+  placeProb(win,i,places,lam){return M.positionProbs(win,i,places,lam).reduce((a,b)=>a+b,0);},
+  ev:(p,o)=>p*o-1,
+  kelly(p,o,frac=1){const b=o-1;if(b<=0)return 0;return Math.max(0,(p*o-1)/b)*frac;},
+  logGrowth(p,o,f){if(f<=0)return 0;const w=1+f*(o-1),l=1-f;if(w<=0||l<=0)return-1e9;
+    return p*Math.log(w)+(1-p)*Math.log(l);},
+  dividend:(T,W,t,s=0)=>(1-t)*(T+s)/(W+s),
+  poolEV:(p,T,W,t,s)=>s*(p*M.dividend(T,W,t,s)-1),
+  poolKelly(p,T,W,t,B){const neg=s=>{if(s<=0)return 0;const d=M.dividend(T,W,t,s),
+      w=1+(s/B)*(d-1),l=1-s/B;if(w<=0||l<=0)return 1e9;return-(p*Math.log(w)+(1-p)*Math.log(l));};
+    if(-neg(1e-6)<=0)return{s:0,d:M.dividend(T,W,t,0)};
+    let a=0,b=B*0.999;const gr=(Math.sqrt(5)-1)/2;let c=b-gr*(b-a),d=a+gr*(b-a);
+    for(let i=0;i<200;i++){if(neg(c)<neg(d))b=d;else a=c;c=b-gr*(b-a);d=a+gr*(b-a);}
+    const s=(a+b)/2;return{s,d:M.dividend(T,W,t,s)};}
+};
+
+/* ============================================================= *
+ *  STATE                                                        *
+ * ============================================================= */
+const SAMPLE=[
+  {name:'Northern Light',r:102,o:2.8},
+  {name:'Cinder Pact',r:98,o:3.6},
+  {name:'Quiet Arbitrage',r:100,o:5.0},
+  {name:'Sunshine Express',r:95,o:7.5},
+  {name:'Maroochy Belle',r:92,o:11},
+  {name:'Game Theorist',r:88,o:17},
+  {name:'Longshot Larry',r:84,o:26},
+  {name:'Tail Risk',r:78,o:51},
+];
+let race=JSON.parse(JSON.stringify(SAMPLE));
+let devigMethod='shin';
+const $=id=>document.getElementById(id);
+const pct=x=>(100*x).toFixed(1)+'%';
+const money=x=>'$'+Math.round(x).toLocaleString();
+const COL={model:'#FFB020',market:'#6E8AE6',pos:'#3FCB7F',neg:'#FF5A72',line:'#2C3852',
+  faint:'#5C6679',grid:'#1B2333',muted:'#8893A8'};
+
+/* ---- derived getters ---- */
+const odds=()=>race.map(r=>r.o);
+const ratings=()=>race.map(r=>r.r);
+const names=()=>race.map(r=>r.name);
+function marketProbs(){return M.devig(odds(),devigMethod);}
+function modelProbs(){const beta=+$('beta').value,w=+$('blend').value;
+  let mp=M.softmax(ratings(),beta);if(w>0)mp=M.blend(mp,marketProbs(),1-w);return mp;}
+
+/* ============================================================= *
+ *  SVG HELPERS                                                  *
+ * ============================================================= */
+function svgEl(w,h){return `<svg class="chart" viewBox="0 0 ${w} ${h}">`;}
+function gridLines(x0,x1,y0,y1,n,fmt,horiz=true){let s='';
+  for(let i=0;i<=n;i++){const t=i/n;
+    if(horiz){const y=y1-(y1-y0)*t;
+      s+=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${COL.grid}" stroke-width="1"/>`;
+      s+=`<text x="${x0-6}" y="${y+3}" fill="${COL.faint}" font-size="9" text-anchor="end">${fmt(t)}</text>`;}
+  }return s;}
+
+/* grouped horizontal bars: two series per runner */
+function pairedBars(el,labels,a,b,colA,colB,fmt){
+  const n=labels.length,rowH=30,top=6,pad=110,w=560,h=top+n*rowH+8;
+  const mx=Math.max(...a,...b,0.01);const bw=w-pad-14;
+  let s=svgEl(w,h);
+  labels.forEach((lab,i)=>{const y=top+i*rowH;
+    s+=`<text x="0" y="${y+rowH/2+4}" fill="${COL.muted}" font-size="11">${lab.slice(0,15)}</text>`;
+    const wa=bw*a[i]/mx, wb=bw*b[i]/mx;
+    s+=`<rect class="barfill" x="${pad}" y="${y+5}" width="${wa}" height="7" rx="2" fill="${colA}" opacity=".9"/>`;
+    s+=`<rect class="barfill" x="${pad}" y="${y+15}" width="${wb}" height="7" rx="2" fill="${colB}"/>`;
+    s+=`<text x="${pad+Math.max(wa,wb)+6}" y="${y+rowH/2+4}" fill="${COL.faint}" font-size="10">${fmt(b[i])}</text>`;
+  });
+  s+='</svg>';el.innerHTML=s;
+}
+/* single horizontal bars */
+function singleBars(el,labels,vals,color,fmt){
+  const n=labels.length,rowH=26,top=6,pad=110,w=540,h=top+n*rowH+6;
+  const mx=Math.max(...vals,0.01),bw=w-pad-44;
+  let s=svgEl(w,h);
+  labels.forEach((lab,i)=>{const y=top+i*rowH;
+    s+=`<text x="0" y="${y+rowH/2+4}" fill="${COL.muted}" font-size="11">${lab.slice(0,15)}</text>`;
+    const wv=bw*vals[i]/mx;
+    s+=`<rect class="barfill" x="${pad}" y="${y+6}" width="${wv}" height="11" rx="2.5" fill="${color}"/>`;
+    s+=`<text x="${pad+wv+6}" y="${y+rowH/2+4}" fill="${COL.faint}" font-size="10">${fmt(vals[i])}</text>`;
+  });
+  s+='</svg>';el.innerHTML=s;
+}
+/* diverging bars from a zero centre */
+function divergingBars(el,labels,vals,fmt){
+  const n=labels.length,rowH=28,top=6,pad=110,w=540,h=top+n*rowH+6;
+  const mx=Math.max(0.001,...vals.map(Math.abs)),cx=pad+(w-pad-10)/2,half=(w-pad-10)/2-30;
+  let s=svgEl(w,h);
+  s+=`<line x1="${cx}" y1="${top}" x2="${cx}" y2="${h-6}" stroke="${COL.line}" stroke-width="1"/>`;
+  labels.forEach((lab,i)=>{const y=top+i*rowH,v=vals[i],col=v>=0?COL.pos:COL.neg;
+    s+=`<text x="0" y="${y+rowH/2+4}" fill="${COL.muted}" font-size="11">${lab.slice(0,15)}</text>`;
+    const wv=half*Math.abs(v)/mx,x=v>=0?cx:cx-wv;
+    s+=`<rect class="barfill" x="${x}" y="${y+6}" width="${wv}" height="12" rx="2.5" fill="${col}"/>`;
+    const tx=v>=0?cx+wv+6:cx-wv-6,anc=v>=0?'start':'end';
+    s+=`<text x="${tx}" y="${y+rowH/2+4}" fill="${col}" font-size="10" text-anchor="${anc}">${fmt(v)}</text>`;
+  });
+  s+='</svg>';el.innerHTML=s;
+}
+
+/* ============================================================= *
+ *  RACE EDITOR                                                  *
+ * ============================================================= */
+function renderRace(){
+  const tb=$('raceBody');tb.innerHTML='';
+  race.forEach((row,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="dim">${i+1}</td>
+      <td><input class="name" value="${row.name}" data-i="${i}" data-k="name"></td>
+      <td><input value="${row.r}" data-i="${i}" data-k="r" inputmode="decimal"></td>
+      <td><input value="${row.o}" data-i="${i}" data-k="o" inputmode="decimal"></td>
+      <td><button class="x" data-del="${i}" title="remove">×</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+    const i=+e.target.dataset.i,k=e.target.dataset.k;
+    race[i][k]=k==='name'?e.target.value:parseFloat(e.target.value)||0;
+    if(k!=='name')renderAll();else renderRace.labelsOnly&&0;}));
+  tb.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{
+    if(race.length<=2)return;race.splice(+e.target.dataset.del,1);renderRace();renderAll();}));
+}
+$('addRow').onclick=()=>{race.push({name:'New Runner',r:85,o:9});renderRace();renderAll();};
+$('resetRace').onclick=()=>{race=JSON.parse(JSON.stringify(SAMPLE));renderRace();renderAll();};
+
+/* ============================================================= *
+ *  STAGE RENDERERS                                              *
+ * ============================================================= */
+function renderHeader(){
+  const o=odds(),bs=M.booksum(o);
+  $('liveBook').textContent=bs.toFixed(3);
+  $('liveOR').textContent=pct(bs-1);
+  $('liveN').textContent=race.length;
+  const mp=modelProbs(),mk=marketProbs();
+  const card=o.map((x,i)=>M.ev(mp[i],x));
+  const best=Math.max(...card);const bi=card.indexOf(best);
+  const fires=card.filter(e=>e>0.02).length;
+  $('heroMetrics').innerHTML=`
+    <div class="m"><div class="k">Overround</div><div class="v tnum" style="color:var(--amber)">${pct(bs-1)}</div></div>
+    <div class="m"><div class="k">Best edge</div><div class="v tnum" style="color:${best>0?'var(--pos)':'var(--neg)'}">${(best>=0?'+':'')+pct(best)}</div></div>
+    <div class="m"><div class="k">Top pick</div><div class="v" style="font-size:16px">${names()[bi].slice(0,16)}</div></div>
+    <div class="m"><div class="k">Bets firing</div><div class="v tnum">${fires}/${race.length}</div></div>`;
+}
+
+function renderDevig(){
+  const o=odds(),raw=M.impliedProbs(o),fair=M.devig(o,devigMethod);
+  const bs=raw.reduce((a,b)=>a+b,0);
+  $('kBook').textContent=bs.toFixed(3);
+  $('kOR').textContent=pct(bs-1);
+  // spread across methods (max abs diff on favourite)
+  const fav=raw.indexOf(Math.max(...raw));
+  const all=['multiplicative','additive','power','shin'].map(m=>M.devig(o,m)[fav]);
+  const spread=Math.max(...all)-Math.min(...all);
+  $('kSpread').textContent='±'+pct(spread/2);
+  $('devigZ').textContent=devigMethod==='shin'?('z = '+M.devigShin(o).z.toFixed(3)):'';
+  pairedBars($('devigChart'),names(),raw,fair,COL.line,COL.model,pct);
+  const notes={
+    multiplicative:'Margin shaved in proportion to price — the default, but it leaves the favourite-longshot bias untouched.',
+    additive:'Equal slice off every runner. Simple, but it over-taxes longshots and can even go negative on wide books.',
+    power:'Raise every implied prob to a common power. Stays in (0,1) and gently corrects the FL bias.',
+    shin:'Models a share z of insider money. Lifts the favourite, shrinks the longshot — the empirically correct direction.'
+  };
+  $('devigNote').textContent=notes[devigMethod];
+}
+$('devigSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  devigMethod=b.dataset.m;
+  $('devigSeg').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  renderAll();});
+
+function renderModel(){
+  $('betaV').textContent=(+$('beta').value).toFixed(3);
+  $('blendV').textContent=Math.round(100*$('blend').value)+'%';
+  pairedBars($('modelChart'),names(),marketProbs(),modelProbs(),COL.market,COL.model,pct);
+}
+
+function renderExotics(){
+  const lam=+$('lam').value;$('lamV').textContent=lam.toFixed(2);
+  const win=modelProbs();
+  const place=win.map((_,i)=>M.placeProb(win,i,3,lam));
+  singleBars($('placeChart'),names(),place,COL.model,pct);
+  // exacta grid top 6
+  const idx=win.map((p,i)=>[p,i]).sort((a,b)=>b[0]-a[0]).slice(0,Math.min(6,win.length)).map(x=>x[1]);
+  let mx=0;idx.forEach(i=>idx.forEach(j=>{if(i!==j)mx=Math.max(mx,M.exacta(win,i,j,lam));}));
+  let h='<table style="font-size:11px"><thead><tr><th style="text-align:left">1st \\ 2nd</th>';
+  idx.forEach(j=>h+=`<th style="text-align:center">${names()[j].split(' ')[0].slice(0,5)}</th>`);
+  h+='</tr></thead><tbody>';
+  idx.forEach(i=>{h+=`<tr><td>${names()[i].split(' ')[0].slice(0,8)}</td>`;
+    idx.forEach(j=>{if(i===j){h+=`<td style="text-align:center;color:${COL.faint}">·</td>`;}
+      else{const v=M.exacta(win,i,j,lam),a=v/mx;
+        h+=`<td style="text-align:center"><span style="display:inline-block;width:100%;
+          background:rgba(255,176,32,${(0.06+0.9*a).toFixed(2)});color:${a>0.45?'#1a1205':COL.muted};
+          border-radius:3px;padding:3px 0">${(100*v).toFixed(1)}</span></td>`;}});
+    h+='</tr>';});
+  h+='</tbody></table>';
+  $('exactaGrid').innerHTML=h;
+}
+
+function renderKelly(){
+  const frac=+$('kfrac').value,minE=+$('minedge').value;
+  $('kfracV').textContent=Math.round(100*frac)+'%';
+  $('minedgeV').textContent=pct(minE);
+  const o=odds(),mp=modelProbs(),mk=marketProbs();
+  const edges=o.map((x,i)=>M.ev(mp[i],x));
+  const kel=o.map((x,i)=>edges[i]>minE?M.kelly(mp[i],x,frac):0);
+  divergingBars($('edgeChart'),names(),edges,v=>(v>=0?'+':'')+pct(v));
+  $('kBets').textContent=kel.filter(k=>k>0).length+'/'+race.length;
+  $('kStake').textContent=pct(kel.reduce((a,b)=>a+b,0));
+  $('kBookEdge').textContent=pct(M.booksum(o)-1);
+  let h='';
+  race.forEach((r,i)=>{const fire=edges[i]>minE;
+    h+=`<tr><td>${r.name.slice(0,16)}</td>
+      <td class="tnum">${r.o.toFixed(2)}</td>
+      <td class="tnum dim">${pct(mk[i])}</td>
+      <td class="tnum" style="color:var(--amber)">${pct(mp[i])}</td>
+      <td class="tnum dim">${(1/mp[i]).toFixed(2)}</td>
+      <td class="tnum ${edges[i]>=0?'pos':'neg'}">${(edges[i]>=0?'+':'')+pct(edges[i])}</td>
+      <td class="tnum">${kel[i]>0?pct(kel[i]):'—'}</td>
+      <td class="tnum" style="color:${fire?'var(--pos)':'var(--faint)'}">${fire?'● fire':'—'}</td></tr>`;});
+  $('cardBody').innerHTML=h;
+}
+
+/* pari-mutuel */
+let poolRunner=2;
+function renderPoolSeg(){
+  const seg=$('poolRunnerSeg');seg.innerHTML='';
+  race.forEach((r,i)=>{const b=document.createElement('button');
+    b.textContent=r.name.split(' ')[0].slice(0,6);b.setAttribute('aria-pressed',i===poolRunner);
+    b.onclick=()=>{poolRunner=i;renderPoolSeg();renderPool();};seg.appendChild(b);});
+}
+function renderPool(){
+  if(poolRunner>=race.length)poolRunner=0;
+  const T=+$('poolT').value,t=+$('poolTake').value,B=+$('poolB').value;
+  $('poolTV').textContent=money(T);$('poolTakeV').textContent=pct(t);$('poolBV').textContent=money(B);
+  $('poolRunnerV').textContent=race[poolRunner].name;
+  const mp=modelProbs(),mk=marketProbs();
+  const p=mp[poolRunner];
+  const W=T*mk[poolRunner];              // pool share implied by the market
+  const o=race[poolRunner].o;
+  const naive=M.kelly(p,o,1)*B;          // fixed-odds Kelly $ (ignores impact)
+  const{s:opt,d:divAt}=M.poolKelly(p,T,W,t,B);
+  $('poolNaive').textContent=money(naive);
+  $('poolOpt').textContent=money(opt);
+  $('poolDiv').textContent=divAt.toFixed(2);
+  // curve: log-growth & dividend vs stake
+  const w=560,h=240,x0=46,x1=w-14,y0=14,y1=h-26;
+  const sMax=Math.max(B*0.6, opt*2.2, 1000);
+  const N=80;let gPts=[],dPts=[];let gMax=1e-9,dMax=0,dMin=1e9;
+  for(let i=0;i<=N;i++){const s=sMax*i/N;const d=M.dividend(T,W,t,s);
+    const win=1+(s/B)*(d-1),lose=1-s/B;
+    const g=(s<=0||win<=0||lose<=0)?0:(p*Math.log(win)+(1-p)*Math.log(lose));
+    gPts.push([s,g]);dPts.push([s,d]);gMax=Math.max(gMax,g);dMax=Math.max(dMax,d);dMin=Math.min(dMin,d);}
+  const gMin=Math.min(0,...gPts.map(q=>q[1]));
+  const sx=s=>x0+(x1-x0)*s/sMax;
+  const gy=g=>y1-(y1-y0)*(g-gMin)/((gMax-gMin)||1);
+  const dy=d=>y1-(y1-y0)*(d-dMin)/((dMax-dMin)||1);
+  let s=svgEl(w,h);
+  s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" stroke="${COL.line}"/>`;
+  s+=`<line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="${COL.line}"/>`;
+  // dividend line
+  s+=`<polyline fill="none" stroke="${COL.market}" stroke-width="1.5" opacity=".7" points="${dPts.map(q=>sx(q[0])+','+dy(q[1])).join(' ')}"/>`;
+  // growth line
+  s+=`<polyline fill="none" stroke="${COL.model}" stroke-width="2" points="${gPts.map(q=>sx(q[0])+','+gy(q[1])).join(' ')}"/>`;
+  // zero growth line
+  s+=`<line x1="${x0}" y1="${gy(0)}" x2="${x1}" y2="${gy(0)}" stroke="${COL.grid}" stroke-dasharray="3 3"/>`;
+  // optimum marker
+  if(opt>0&&opt<sMax){s+=`<line x1="${sx(opt)}" y1="${y0}" x2="${sx(opt)}" y2="${y1}" stroke="${COL.pos}" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+    s+=`<circle cx="${sx(opt)}" cy="${gy(M.poolKelly(p,T,W,t,B).s>0?gPts.reduce((a,q)=>Math.abs(q[0]-opt)<Math.abs(a[0]-opt)?q:a)[1]:0)}" r="3.5" fill="${COL.pos}"/>`;
+    s+=`<text x="${sx(opt)+5}" y="${y0+10}" fill="${COL.pos}" font-size="9">optimum ${money(opt)}</text>`;}
+  // naive kelly marker
+  if(naive>0&&naive<sMax){s+=`<line x1="${sx(naive)}" y1="${y0}" x2="${sx(naive)}" y2="${y1}" stroke="${COL.faint}" stroke-width="1" stroke-dasharray="2 3"/>`;
+    s+=`<text x="${sx(naive)+4}" y="${y1-4}" fill="${COL.faint}" font-size="9">naive ${money(naive)}</text>`;}
+  s+=`<text x="${x0}" y="${h-8}" fill="${COL.faint}" font-size="9">stake →</text>`;
+  s+=`<text x="${x0-4}" y="${y0+4}" fill="${COL.model}" font-size="9" text-anchor="end">g</text>`;
+  s+='</svg>';
+  $('poolChart').innerHTML=s;
+}
+
+/* monte carlo bankroll */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function renderMC(){
+  const edge=+$('mcEdge').value,o=+$('mcOdds').value,frac=+$('mcFrac').value,n=+$('mcN').value;
+  $('mcEdgeV').textContent=pct(edge);$('mcOddsV').textContent=o.toFixed(1);
+  $('mcFracV').textContent=Math.round(100*frac)+'%';$('mcNV').textContent=n;
+  const p=(1+edge)/o;                 // win prob consistent with that edge
+  const f=Math.max(0,(p*o-1)/(o-1))*frac;
+  const sims=240;const rnd=mulberry32(12345);
+  const steps=40;const trajIdx=[];for(let i=0;i<=steps;i++)trajIdx.push(Math.round(i*n/steps));
+  const all=[];let ruin=0;
+  for(let sIdx=0;sIdx<sims;sIdx++){let bank=1,minB=1,ti=0;const tr=[];
+    for(let k=0;k<=n;k++){if(k===trajIdx[ti]){tr.push(bank);ti++;}
+      if(k<n){const win=rnd()<p;bank*= win?(1+f*(o-1)):(1-f);minB=Math.min(minB,bank);}}
+    if(minB<=0.5)ruin++;all.push(tr);}
+  // percentiles per checkpoint
+  const T=trajIdx.length;const med=[],p5=[],p95=[];
+  for(let k=0;k<T;k++){const col=all.map(tr=>tr[k]).sort((a,b)=>a-b);
+    med.push(col[Math.floor(col.length*0.5)]);p5.push(col[Math.floor(col.length*0.05)]);
+    p95.push(col[Math.floor(col.length*0.95)]);}
+  $('mcMed').textContent=(med[T-1]>=1?'+':'')+pct(med[T-1]-1);
+  $('mcP5').textContent=(p5[T-1]>=1?'+':'')+pct(p5[T-1]-1);
+  $('mcRuin').textContent=pct(ruin/sims);
+  // chart (log scale)
+  const w=560,h=250,x0=40,x1=w-12,y0=14,y1=h-24;
+  const allv=[...med,...p5,...p95,1];const lo=Math.log(Math.max(0.05,Math.min(...allv))),
+    hi=Math.log(Math.max(...allv)*1.05);
+  const sx=k=>x0+(x1-x0)*k/(T-1);
+  const sy=v=>{const L=Math.log(Math.max(0.001,v));return y1-(y1-y0)*(L-lo)/((hi-lo)||1);};
+  let s=svgEl(w,h);
+  [0.25,0.5,1,2,4,8,16].forEach(v=>{if(v>=Math.exp(lo)&&v<=Math.exp(hi)){
+    s+=`<line x1="${x0}" y1="${sy(v)}" x2="${x1}" y2="${sy(v)}" stroke="${COL.grid}"/>`;
+    s+=`<text x="${x0-5}" y="${sy(v)+3}" fill="${COL.faint}" font-size="9" text-anchor="end">${v}×</text>`;}});
+  s+=`<line x1="${x0}" y1="${sy(1)}" x2="${x1}" y2="${sy(1)}" stroke="${COL.faint}" stroke-dasharray="3 3"/>`;
+  // fan
+  const band=p95.map((v,k)=>sx(k)+','+sy(v)).join(' ')+' '+p5.map((v,k)=>sx(T-1-k)+','+sy(p5[T-1-k])).join(' ');
+  s+=`<polygon points="${band}" fill="rgba(255,176,32,0.16)" stroke="none"/>`;
+  s+=`<polyline fill="none" stroke="${COL.model}" stroke-width="2" points="${med.map((v,k)=>sx(k)+','+sy(v)).join(' ')}"/>`;
+  s+=`<text x="${x1}" y="${y1+18}" fill="${COL.faint}" font-size="9" text-anchor="end">bets →</text>`;
+  s+='</svg>';$('mcChart').innerHTML=s;
+}
+function renderCLV(){
+  const take=+$('clvTake').value,close=+$('clvClose').value;
+  $('clvTakeV').textContent=take.toFixed(2);$('clvCloseV').textContent=close.toFixed(2);
+  const clv=take/close-1;
+  $('clvVal').textContent=(clv>=0?'+':'')+pct(clv);
+  $('clvVal').style.color=clv>=0?'var(--pos)':'var(--neg)';
+  $('clvNote').textContent=clv>=0
+    ?`You took ${take.toFixed(2)} on something that closed at ${close.toFixed(2)}. If the closing line is the efficient estimate, that gap is your expected edge — beat the close consistently and the P&L is just variance resolving in your favour.`
+    :`You took ${take.toFixed(2)} but it closed shorter at ${close.toFixed(2)}. Negative CLV means the market moved against you — a warning that the model, not the result, needs review.`;
+}
+
+/* ============================================================= *
+ *  ORCHESTRATION                                                *
+ * ============================================================= */
+function renderAll(){
+  renderHeader();renderDevig();renderModel();renderExotics();renderKelly();
+  renderPoolSeg();renderPool();
+}
+['beta','blend'].forEach(id=>$(id).addEventListener('input',()=>{renderModel();renderExotics();renderKelly();renderHeader();renderPool();}));
+$('lam').addEventListener('input',renderExotics);
+['kfrac','minedge'].forEach(id=>$(id).addEventListener('input',renderKelly));
+['poolT','poolTake','poolB'].forEach(id=>$(id).addEventListener('input',renderPool));
+['mcEdge','mcOdds','mcFrac','mcN'].forEach(id=>$(id).addEventListener('input',renderMC));
+['clvTake','clvClose'].forEach(id=>$(id).addEventListener('input',renderCLV));
+
+renderRace();renderAll();renderMC();renderCLV();
+</script>
+</body>
+</html>
