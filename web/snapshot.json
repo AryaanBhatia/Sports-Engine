@@ -1,0 +1,1204 @@
+{
+  "generated_at": "2026-06-15T11:17:47.531720+00:00",
+  "live": false,
+  "source": "mock",
+  "params": {
+    "method": "shin",
+    "margin": 0.05,
+    "kelly_frac": 0.25,
+    "min_edge": 0.0,
+    "regions": "au,uk,eu",
+    "sport": "upcoming"
+  },
+  "n_events": 12,
+  "n_edges": 10,
+  "board": [
+    {
+      "id": "mock-0",
+      "sport_key": "soccer_fifa_world_cup",
+      "sport_title": "FIFA World Cup",
+      "commence_time": "2026-06-15T11:37:47.528638+00:00",
+      "label": "Brazil v Argentina",
+      "home_team": "Brazil",
+      "away_team": "Argentina",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Brazil",
+          "prob": 0.4059413120573176,
+          "fair_odds": 2.4634102770471493,
+          "offered": 2.34610502575919,
+          "best_price": 2.45,
+          "best_book": "Pinnacle",
+          "edge": -0.005443785459571804,
+          "kelly": 0.0
+        },
+        {
+          "name": "Draw",
+          "prob": 0.2659509110017146,
+          "fair_odds": 3.7600924028929272,
+          "offered": 3.58104038370755,
+          "best_price": 3.72,
+          "best_book": "Sportsbet",
+          "edge": -0.010662611073621653,
+          "kelly": 0.0
+        },
+        {
+          "name": "Argentina",
+          "prob": 0.3281077769409678,
+          "fair_odds": 3.0477790234759263,
+          "offered": 2.902646689024692,
+          "best_price": 2.99,
+          "best_book": "Betfair",
+          "edge": -0.018957746946506093,
+          "kelly": 0.0
+        }
+      ],
+      "edges": [],
+      "best_edge": -0.005443785459571804,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.45,
+            3.59,
+            2.96
+          ],
+          "overround": 0.024552635177386373
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            2.33,
+            3.72,
+            2.95
+          ],
+          "overround": 0.03698480450475605
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            2.27,
+            3.52,
+            2.89
+          ],
+          "overround": 0.07064030469781724
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            2.31,
+            3.57,
+            2.84
+          ],
+          "overround": 0.06512515377469819
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.45,
+            3.61,
+            2.99
+          ],
+          "overround": 0.019619736090547013
+        }
+      ]
+    },
+    {
+      "id": "mock-1",
+      "sport_key": "soccer_fifa_world_cup",
+      "sport_title": "FIFA World Cup",
+      "commence_time": "2026-06-15T12:12:47.528638+00:00",
+      "label": "France v Spain",
+      "home_team": "France",
+      "away_team": "Spain",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "France",
+          "prob": 0.38590216855710036,
+          "fair_odds": 2.591330346079758,
+          "offered": 2.467933662933103,
+          "best_price": 2.58,
+          "best_book": "Betfair",
+          "edge": -0.004372405122681,
+          "kelly": 0.0
+        },
+        {
+          "name": "Draw",
+          "prob": 0.27569667795300057,
+          "fair_odds": 3.627174645065818,
+          "offered": 3.454452042919826,
+          "best_price": 3.71,
+          "best_book": "Sportsbet",
+          "edge": 0.022834675205632093,
+          "kelly": 0.0021065198529180897
+        },
+        {
+          "name": "Spain",
+          "prob": 0.3384011534898992,
+          "fair_odds": 2.95507266948441,
+          "offered": 2.814354923318486,
+          "best_price": 2.88,
+          "best_book": "Pinnacle",
+          "edge": -0.025404677949090404,
+          "kelly": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "name": "Draw",
+          "prob": 0.27569667795300057,
+          "fair_odds": 3.627174645065818,
+          "offered": 3.454452042919826,
+          "best_price": 3.71,
+          "best_book": "Sportsbet",
+          "edge": 0.022834675205632093,
+          "kelly": 0.0021065198529180897
+        }
+      ],
+      "best_edge": 0.022834675205632093,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.57,
+            3.46,
+            2.88
+          ],
+          "overround": 0.02534462162844342
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            2.43,
+            3.71,
+            2.87
+          ],
+          "overround": 0.02949646846972609
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            2.41,
+            3.34,
+            2.81
+          ],
+          "overround": 0.07021084306188641
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            2.44,
+            3.42,
+            2.76
+          ],
+          "overround": 0.06455256697219403
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.58,
+            3.52,
+            2.88
+          ],
+          "overround": 0.018910030537937494
+        }
+      ]
+    },
+    {
+      "id": "mock-2",
+      "sport_key": "soccer_fifa_world_cup",
+      "sport_title": "FIFA World Cup",
+      "commence_time": "2026-06-15T12:47:47.528638+00:00",
+      "label": "England v Netherlands",
+      "home_team": "England",
+      "away_team": "Netherlands",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "England",
+          "prob": 0.44409535676974704,
+          "fair_odds": 2.251768645530956,
+          "offered": 2.144541567172339,
+          "best_price": 2.23,
+          "best_book": "Pinnacle",
+          "edge": -0.009667354403464112,
+          "kelly": 0.0
+        },
+        {
+          "name": "Draw",
+          "prob": 0.2683602215740624,
+          "fair_odds": 3.726334678569412,
+          "offered": 3.5488901700661066,
+          "best_price": 3.74,
+          "best_book": "Sportsbet",
+          "edge": 0.003667228686993429,
+          "kelly": 0.00033460115757239314
+        },
+        {
+          "name": "Netherlands",
+          "prob": 0.2875444216561905,
+          "fair_odds": 3.477723526125902,
+          "offered": 3.3121176439294304,
+          "best_price": 3.41,
+          "best_book": "Sportsbet",
+          "edge": -0.0194735221523904,
+          "kelly": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "name": "Draw",
+          "prob": 0.2683602215740624,
+          "fair_odds": 3.726334678569412,
+          "offered": 3.5488901700661066,
+          "best_price": 3.74,
+          "best_book": "Sportsbet",
+          "edge": 0.003667228686993429,
+          "kelly": 0.00033460115757239314
+        }
+      ],
+      "best_edge": 0.003667228686993429,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.23,
+            3.58,
+            3.37
+          ],
+          "overround": 0.024496007256600505
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            2.1,
+            3.74,
+            3.41
+          ],
+          "overround": 0.036825287299670606
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            2.17,
+            3.33,
+            3.23
+          ],
+          "overround": 0.07072731660767229
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            2.11,
+            3.54,
+            3.24
+          ],
+          "overround": 0.06506150030395608
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.23,
+            3.64,
+            3.37
+          ],
+          "overround": 0.019891673043327618
+        }
+      ]
+    },
+    {
+      "id": "mock-3",
+      "sport_key": "soccer_fifa_world_cup",
+      "sport_title": "FIFA World Cup",
+      "commence_time": "2026-06-15T13:22:47.528638+00:00",
+      "label": "Portugal v Germany",
+      "home_team": "Portugal",
+      "away_team": "Germany",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Portugal",
+          "prob": 0.35960875389826047,
+          "fair_odds": 2.780799936485743,
+          "offered": 2.648380891891184,
+          "best_price": 2.75,
+          "best_book": "Betfair",
+          "edge": -0.011075926779783751,
+          "kelly": 0.0
+        },
+        {
+          "name": "Draw",
+          "prob": 0.2765593431869673,
+          "fair_odds": 3.6158604821532006,
+          "offered": 3.443676649669715,
+          "best_price": 3.77,
+          "best_book": "Sportsbet",
+          "edge": 0.0426287238148666,
+          "kelly": 0.003847357745024061
+        },
+        {
+          "name": "Germany",
+          "prob": 0.3638319029147723,
+          "fair_odds": 2.7485220289608585,
+          "offered": 2.6176400275817695,
+          "best_price": 2.72,
+          "best_book": "Betfair",
+          "edge": -0.010377224071819291,
+          "kelly": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "name": "Draw",
+          "prob": 0.2765593431869673,
+          "fair_odds": 3.6158604821532006,
+          "offered": 3.443676649669715,
+          "best_price": 3.77,
+          "best_book": "Sportsbet",
+          "edge": 0.0426287238148666,
+          "kelly": 0.003847357745024061
+        }
+      ],
+      "best_edge": 0.0426287238148666,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.72,
+            3.46,
+            2.71
+          ],
+          "overround": 0.025668089900892088
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            2.62,
+            3.77,
+            2.61
+          ],
+          "overround": 0.030073141155004812
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            2.7,
+            3.28,
+            2.53
+          ],
+          "overround": 0.07050533614690568
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            2.58,
+            3.4,
+            2.61
+          ],
+          "overround": 0.064856308735737
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.75,
+            3.47,
+            2.72
+          ],
+          "overround": 0.019467860500238743
+        }
+      ]
+    },
+    {
+      "id": "mock-4",
+      "sport_key": "basketball_nba",
+      "sport_title": "NBA",
+      "commence_time": "2026-06-15T13:57:47.528638+00:00",
+      "label": "Boston Celtics v Denver Nuggets",
+      "home_team": "Boston Celtics",
+      "away_team": "Denver Nuggets",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Boston Celtics",
+          "prob": 0.5866010372824322,
+          "fair_odds": 1.70473616042811,
+          "offered": 1.6235582480267714,
+          "best_price": 1.69,
+          "best_book": "Betfair",
+          "edge": -0.00864424699268962,
+          "kelly": 0.0
+        },
+        {
+          "name": "Denver Nuggets",
+          "prob": 0.41339896271756776,
+          "fair_odds": 2.4189707526750506,
+          "offered": 2.3037816692143336,
+          "best_price": 2.42,
+          "best_book": "Sportsbet",
+          "edge": 0.00042548977651390985,
+          "kelly": 7.4910171921463e-05
+        }
+      ],
+      "edges": [
+        {
+          "name": "Denver Nuggets",
+          "prob": 0.41339896271756776,
+          "fair_odds": 2.4189707526750506,
+          "offered": 2.3037816692143336,
+          "best_price": 2.42,
+          "best_book": "Sportsbet",
+          "edge": 0.00042548977651390985,
+          "kelly": 7.4910171921463e-05
+        }
+      ],
+      "best_edge": 0.00042548977651390985,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            1.68,
+            2.33
+          ],
+          "overround": 0.02442264459431831
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.63,
+            2.42
+          ],
+          "overround": 0.02672007301120516
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.59,
+            2.27
+          ],
+          "overround": 0.06945945197129633
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.63,
+            2.22
+          ],
+          "overround": 0.06394738296578772
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            1.69,
+            2.33
+          ],
+          "overround": 0.02090052568758427
+        }
+      ]
+    },
+    {
+      "id": "mock-5",
+      "sport_key": "basketball_nba",
+      "sport_title": "NBA",
+      "commence_time": "2026-06-15T14:32:47.528638+00:00",
+      "label": "Oklahoma City Thunder v New York Knicks",
+      "home_team": "Oklahoma City Thunder",
+      "away_team": "New York Knicks",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Oklahoma City Thunder",
+          "prob": 0.6436030851717989,
+          "fair_odds": 1.55375265134577,
+          "offered": 1.4797644298531143,
+          "best_price": 1.53,
+          "best_book": "Pinnacle",
+          "edge": -0.015287279687147715,
+          "kelly": 0.0
+        },
+        {
+          "name": "New York Knicks",
+          "prob": 0.3563969148282012,
+          "fair_odds": 2.8058604280624695,
+          "offered": 2.672248026726161,
+          "best_price": 2.77,
+          "best_book": "Sportsbet",
+          "edge": -0.012780545925882736,
+          "kelly": 0.0
+        }
+      ],
+      "edges": [],
+      "best_edge": -0.012780545925882736,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            1.53,
+            2.68
+          ],
+          "overround": 0.026729099600038886
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.5,
+            2.77
+          ],
+          "overround": 0.02767749699157651
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.46,
+            2.58
+          ],
+          "overround": 0.07252840607412114
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.49,
+            2.54
+          ],
+          "overround": 0.06484172699889035
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            1.53,
+            2.74
+          ],
+          "overround": 0.01855827489146522
+        }
+      ]
+    },
+    {
+      "id": "mock-6",
+      "sport_key": "tennis_atp",
+      "sport_title": "ATP",
+      "commence_time": "2026-06-15T15:07:47.528638+00:00",
+      "label": "C. Alcaraz v J. Sinner",
+      "home_team": "C. Alcaraz",
+      "away_team": "J. Sinner",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "C. Alcaraz",
+          "prob": 0.527875206346199,
+          "fair_odds": 1.89438713540216,
+          "offered": 1.804178224192533,
+          "best_price": 1.88,
+          "best_book": "Betfair",
+          "edge": -0.007594612069145912,
+          "kelly": 0.0
+        },
+        {
+          "name": "J. Sinner",
+          "prob": 0.472124793653801,
+          "fair_odds": 2.1180840604894784,
+          "offered": 2.0172229147518843,
+          "best_price": 2.17,
+          "best_book": "Sportsbet",
+          "edge": 0.02451080222874813,
+          "kelly": 0.005237350903578661
+        }
+      ],
+      "edges": [
+        {
+          "name": "J. Sinner",
+          "prob": 0.472124793653801,
+          "fair_odds": 2.1180840604894784,
+          "offered": 2.0172229147518843,
+          "best_price": 2.17,
+          "best_book": "Sportsbet",
+          "edge": 0.02451080222874813,
+          "kelly": 0.005237350903578661
+        }
+      ],
+      "best_edge": 0.02451080222874813,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            1.86,
+            2.05
+          ],
+          "overround": 0.02543928665093098
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.83,
+            2.17
+          ],
+          "overround": 0.007277580519251536
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.79,
+            1.96
+          ],
+          "overround": 0.06886329950974801
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.77,
+            2.0
+          ],
+          "overround": 0.0649717514124295
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            1.88,
+            2.04
+          ],
+          "overround": 0.02211097204839385
+        }
+      ]
+    },
+    {
+      "id": "mock-7",
+      "sport_key": "tennis_atp",
+      "sport_title": "ATP",
+      "commence_time": "2026-06-15T15:42:47.528638+00:00",
+      "label": "N. Djokovic v A. Zverev",
+      "home_team": "N. Djokovic",
+      "away_team": "A. Zverev",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "N. Djokovic",
+          "prob": 0.5558566717052571,
+          "fair_odds": 1.7990249121814081,
+          "offered": 1.7133570592203888,
+          "best_price": 1.79,
+          "best_book": "Betfair",
+          "edge": -0.005016557647589792,
+          "kelly": 0.0
+        },
+        {
+          "name": "A. Zverev",
+          "prob": 0.44414332829474296,
+          "fair_odds": 2.251525434006697,
+          "offered": 2.144309937149235,
+          "best_price": 2.32,
+          "best_book": "Sportsbet",
+          "edge": 0.03041252164380359,
+          "kelly": 0.005759947281023408
+        }
+      ],
+      "edges": [
+        {
+          "name": "A. Zverev",
+          "prob": 0.44414332829474296,
+          "fair_odds": 2.251525434006697,
+          "offered": 2.144309937149235,
+          "best_price": 2.32,
+          "best_book": "Sportsbet",
+          "edge": 0.03041252164380359,
+          "kelly": 0.005759947281023408
+        }
+      ],
+      "best_edge": 0.03041252164380359,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            1.78,
+            2.17
+          ],
+          "overround": 0.02262724589654641
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.72,
+            2.32
+          ],
+          "overround": 0.012429831595829999
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.7,
+            2.07
+          ],
+          "overround": 0.07132708155726064
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.68,
+            2.13
+          ],
+          "overround": 0.06472166331321261
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            1.79,
+            2.17
+          ],
+          "overround": 0.019488710964652434
+        }
+      ]
+    },
+    {
+      "id": "mock-8",
+      "sport_key": "aussierules_afl",
+      "sport_title": "AFL",
+      "commence_time": "2026-06-15T16:17:47.528638+00:00",
+      "label": "Collingwood v Carlton",
+      "home_team": "Collingwood",
+      "away_team": "Carlton",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Collingwood",
+          "prob": 0.618928437865633,
+          "fair_odds": 1.6156956746865396,
+          "offered": 1.5387577854157521,
+          "best_price": 1.61,
+          "best_book": "Betfair",
+          "edge": -0.003525215036330742,
+          "kelly": 0.0
+        },
+        {
+          "name": "Carlton",
+          "prob": 0.3810715621343671,
+          "fair_odds": 2.6241790240107097,
+          "offered": 2.499218118105438,
+          "best_price": 2.74,
+          "best_book": "Sportsbet",
+          "edge": 0.04413608024816584,
+          "kelly": 0.006341390840253713
+        }
+      ],
+      "edges": [
+        {
+          "name": "Carlton",
+          "prob": 0.3810715621343671,
+          "fair_odds": 2.6241790240107097,
+          "offered": 2.499218118105438,
+          "best_price": 2.74,
+          "best_book": "Sportsbet",
+          "edge": 0.04413608024816584,
+          "kelly": 0.006341390840253713
+        }
+      ],
+      "best_edge": 0.04413608024816584,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            1.6,
+            2.5
+          ],
+          "overround": 0.02499999999999991
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.53,
+            2.74
+          ],
+          "overround": 0.01855827489146522
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.55,
+            2.35
+          ],
+          "overround": 0.07069320521619771
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.51,
+            2.48
+          ],
+          "overround": 0.06547746208075211
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            1.61,
+            2.51
+          ],
+          "overround": 0.01952438692435221
+        }
+      ]
+    },
+    {
+      "id": "mock-9",
+      "sport_key": "rugbyleague_nrl",
+      "sport_title": "NRL",
+      "commence_time": "2026-06-15T16:52:47.528638+00:00",
+      "label": "Penrith Panthers v Melbourne Storm",
+      "home_team": "Penrith Panthers",
+      "away_team": "Melbourne Storm",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Penrith Panthers",
+          "prob": 0.4899972033978329,
+          "fair_odds": 2.0408279742529296,
+          "offered": 1.9436456897646945,
+          "best_price": 2.01,
+          "best_book": "Pinnacle",
+          "edge": -0.015105621170355965,
+          "kelly": 0.0
+        },
+        {
+          "name": "Melbourne Storm",
+          "prob": 0.5100027966021671,
+          "fair_odds": 1.960773561757663,
+          "offered": 1.8674033921501552,
+          "best_price": 2.01,
+          "best_book": "Sportsbet",
+          "edge": 0.025105621170355752,
+          "kelly": 0.006214262665929643
+        }
+      ],
+      "edges": [
+        {
+          "name": "Melbourne Storm",
+          "prob": 0.5100027966021671,
+          "fair_odds": 1.960773561757663,
+          "offered": 1.8674033921501552,
+          "best_price": 2.01,
+          "best_book": "Sportsbet",
+          "edge": 0.025105621170355752,
+          "kelly": 0.006214262665929643
+        }
+      ],
+      "best_edge": 0.025105621170355752,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.01,
+            1.9
+          ],
+          "overround": 0.023828227284629522
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.94,
+            2.01
+          ],
+          "overround": 0.012976355336718592
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.91,
+            1.83
+          ],
+          "overround": 0.07000829685577781
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.92,
+            1.84
+          ],
+          "overround": 0.06431159420289845
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.01,
+            1.91
+          ],
+          "overround": 0.021072647235029107
+        }
+      ]
+    },
+    {
+      "id": "mock-10",
+      "sport_key": "cricket_t20",
+      "sport_title": "T20 Cricket",
+      "commence_time": "2026-06-15T17:27:47.528638+00:00",
+      "label": "Australia v India",
+      "home_team": "Australia",
+      "away_team": "India",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Australia",
+          "prob": 0.4734193474980794,
+          "fair_odds": 2.112292210457362,
+          "offered": 2.0117068671022493,
+          "best_price": 2.1,
+          "best_book": "Betfair",
+          "edge": -0.005819370254033229,
+          "kelly": 0.0
+        },
+        {
+          "name": "India",
+          "prob": 0.5265806525019207,
+          "fair_odds": 1.899044325401516,
+          "offered": 1.808613643239539,
+          "best_price": 1.98,
+          "best_book": "Sportsbet",
+          "edge": 0.04262969195380295,
+          "kelly": 0.010874921416786467
+        }
+      ],
+      "edges": [
+        {
+          "name": "India",
+          "prob": 0.5265806525019207,
+          "fair_odds": 1.899044325401516,
+          "offered": 1.808613643239539,
+          "best_price": 1.98,
+          "best_book": "Sportsbet",
+          "edge": 0.04262969195380295,
+          "kelly": 0.010874921416786467
+        }
+      ],
+      "best_edge": 0.04262969195380295,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.08,
+            1.84
+          ],
+          "overround": 0.024247491638795804
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            1.98,
+            1.98
+          ],
+          "overround": 0.010101010101010166
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            1.99,
+            1.76
+          ],
+          "overround": 0.07069438099588865
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            1.97,
+            1.79
+          ],
+          "overround": 0.06627343107506434
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.1,
+            1.84
+          ],
+          "overround": 0.01966873706004124
+        }
+      ]
+    },
+    {
+      "id": "mock-11",
+      "sport_key": "horse_racing",
+      "sport_title": "Horse Racing",
+      "commence_time": "2026-06-15T18:02:47.528638+00:00",
+      "label": "R5 Eagle Farm v field",
+      "home_team": "R5 Eagle Farm",
+      "away_team": "field",
+      "n_books": 5,
+      "selections": [
+        {
+          "name": "Northern Light",
+          "prob": 0.342119111311295,
+          "fair_odds": 2.9229586039994637,
+          "offered": 2.783770099047108,
+          "best_price": 2.9,
+          "best_book": "Pinnacle",
+          "edge": -0.007854577197244472,
+          "kelly": 0.0
+        },
+        {
+          "name": "Cinder Pact",
+          "prob": 0.24814121710352083,
+          "fair_odds": 4.029963307477511,
+          "offered": 3.8380602928357246,
+          "best_price": 4.18,
+          "best_book": "Sportsbet",
+          "edge": 0.03723028749271706,
+          "kelly": 0.0029269093940815305
+        },
+        {
+          "name": "Quiet Arbitrage",
+          "prob": 0.18175567105375606,
+          "fair_odds": 5.501891600973705,
+          "offered": 5.2398967628321,
+          "best_price": 5.41,
+          "best_book": "Betfair",
+          "edge": -0.016701819599179712,
+          "kelly": 0.0
+        },
+        {
+          "name": "Sunshine Express",
+          "prob": 0.12921494189738855,
+          "fair_odds": 7.739043065113278,
+          "offered": 7.370517204869788,
+          "best_price": 7.57,
+          "best_book": "Betfair",
+          "edge": -0.02184288983676863,
+          "kelly": 0.0
+        },
+        {
+          "name": "Maroochy Belle",
+          "prob": 0.09876905863403951,
+          "fair_odds": 10.124628237120431,
+          "offered": 9.64250308297184,
+          "best_price": 9.79,
+          "best_book": "Pinnacle",
+          "edge": -0.033050915972753336,
+          "kelly": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "name": "Cinder Pact",
+          "prob": 0.24814121710352083,
+          "fair_odds": 4.029963307477511,
+          "offered": 3.8380602928357246,
+          "best_price": 4.18,
+          "best_book": "Sportsbet",
+          "edge": 0.03723028749271706,
+          "kelly": 0.0029269093940815305
+        }
+      ],
+      "best_edge": 0.03723028749271706,
+      "per_book": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "prices": [
+            2.9,
+            3.88,
+            5.36,
+            7.51,
+            9.79
+          ],
+          "overround": 0.024427547391122406
+        },
+        {
+          "key": "sportsbet",
+          "title": "Sportsbet",
+          "prices": [
+            2.71,
+            4.18,
+            5.37,
+            7.29,
+            9.28
+          ],
+          "overround": 0.039390711027971426
+        },
+        {
+          "key": "ladbrokes_au",
+          "title": "Ladbrokes",
+          "prices": [
+            2.79,
+            3.78,
+            5.05,
+            7.22,
+            9.08
+          ],
+          "overround": 0.06962931931352512
+        },
+        {
+          "key": "tab",
+          "title": "TAB",
+          "prices": [
+            2.82,
+            3.78,
+            5.12,
+            6.96,
+            9.37
+          ],
+          "overround": 0.06487444046030566
+        },
+        {
+          "key": "betfair_ex_au",
+          "title": "Betfair",
+          "prices": [
+            2.89,
+            3.94,
+            5.41,
+            7.57,
+            9.66
+          ],
+          "overround": 0.02029081643189179
+        }
+      ]
+    }
+  ]
+}

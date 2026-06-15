@@ -1,0 +1,334 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edge Engine — Trading Floor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0D13; --panel:#121826; --panel-2:#0E1420; --well:#161D2C;
+  --line:#222B3D; --line-2:#2C3852;
+  --text:#E7ECF6; --muted:#8893A8; --faint:#5C6679;
+  --amber:#FFB020; --amber-dim:#A8741B;
+  --market:#6E8AE6;
+  --pos:#3FCB7F; --neg:#FF5A72;
+  --grid:#1B2333; --r:10px;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--disp);margin:0}
+a{color:var(--market)}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:rgba(10,13,19,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:18px;padding:11px 20px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:700;letter-spacing:.04em;font-size:15px}
+.brand .b{color:var(--amber)}
+.badge{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;
+  padding:3px 8px;border-radius:6px;border:1px solid var(--line-2)}
+.badge.live{color:var(--pos);border-color:rgba(63,203,127,.4);background:rgba(63,203,127,.08)}
+.badge.mock{color:var(--amber);border-color:rgba(255,176,32,.4);background:rgba(255,176,32,.08)}
+.bar .stat{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.bar .stat b{color:var(--text);font-weight:600}
+.bar .right{margin-left:auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--pos);display:inline-block;
+  margin-right:6px;box-shadow:0 0 0 0 rgba(63,203,127,.5);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,203,127,.45)}70%{box-shadow:0 0 0 6px rgba(63,203,127,0)}100%{box-shadow:0 0 0 0 rgba(63,203,127,0)}}
+
+/* controls */
+.controls{display:flex;gap:26px;align-items:center;flex-wrap:wrap;
+  padding:13px 20px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.ctl{display:flex;flex-direction:column;gap:5px;min-width:140px}
+.ctl label{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between}
+.ctl label b{color:var(--amber);font-weight:600}
+input[type=range]{-webkit-appearance:none;appearance:none;height:3px;border-radius:3px;
+  background:var(--line-2);outline:none;width:100%}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;
+  border-radius:50%;background:var(--amber);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:var(--amber);cursor:pointer}
+select,.btn{font-family:var(--mono);font-size:12px;background:var(--well);color:var(--text);
+  border:1px solid var(--line-2);border-radius:7px;padding:6px 10px;cursor:pointer}
+.toggle{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* layout */
+.wrap{display:grid;grid-template-columns:1fr 330px;gap:18px;padding:18px 20px;max-width:1320px;margin:0 auto}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;align-content:start}
+
+/* event card */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card.hot{border-color:rgba(63,203,127,.45);box-shadow:0 0 0 1px rgba(63,203,127,.12)}
+.card .head{padding:11px 13px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
+.card .sport{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-dim)}
+.card .match{font-family:var(--disp);font-weight:600;font-size:15px}
+.card .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.card .meta .edge-tag{color:var(--pos);font-weight:600}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+thead th{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
+  font-weight:500;text-align:right;padding:7px 8px 5px;border-bottom:1px solid var(--line)}
+thead th.l{text-align:left}
+tbody td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--grid)}
+tbody td.l{text-align:left;color:var(--text)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.pos{background:rgba(63,203,127,.06)}
+.fair{color:var(--muted)}
+.offered{color:var(--amber)}
+.market{color:var(--market)}
+.edge.p{color:var(--pos)}.edge.n{color:var(--faint)}
+.take{font-family:var(--mono);font-size:10px;border:1px solid var(--line-2);background:transparent;
+  color:var(--muted);border-radius:5px;padding:2px 7px;cursor:pointer}
+.take.on{color:var(--pos);border-color:rgba(63,203,127,.4)}
+.take:hover{border-color:var(--amber);color:var(--amber)}
+
+/* blotter */
+.side{align-self:start;position:sticky;top:64px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.panel h3{font-size:13px;letter-spacing:.02em;margin-bottom:3px}
+.panel .sub{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-bottom:11px}
+.blot{font-family:var(--mono);font-size:11.5px}
+.blot .row{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--grid)}
+.blot .row:last-child{border-bottom:0}
+.blot .nm{color:var(--text)}
+.blot .sm{color:var(--faint);font-size:10px}
+.blot .clv{text-align:right;font-weight:600}
+.blot .clv.p{color:var(--pos)}.blot .clv.n{color:var(--neg)}
+.empty{color:var(--faint);font-family:var(--mono);font-size:11.5px;padding:6px 0 2px}
+.tot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;
+  color:var(--muted);margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
+.tot b{color:var(--text)}
+.foot{max-width:1320px;margin:8px auto 40px;padding:18px 20px;border-top:1px solid var(--line);
+  color:var(--faint);font-size:11.5px;line-height:1.7}
+.foot .mono{color:var(--muted)}
+.note{color:var(--muted)}
+</style>
+
+<div class="bar">
+  <span class="brand"><span class="b">EDGE</span> ENGINE · FLOOR</span>
+  <span id="srcBadge" class="badge mock">MOCK</span>
+  <span class="stat"><span id="liveDot"></span><b id="nEvents">0</b> events</span>
+  <span class="stat"><b id="nEdges">0</b> live edges</span>
+  <span class="stat">updated <b id="updated">—</b></span>
+  <div class="right">
+    <span class="toggle"><input type="checkbox" id="auto" checked> auto-refresh</span>
+    <button class="btn" id="refresh">refresh now</button>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="ctl" style="min-width:170px">
+    <label>Sport</label>
+    <select id="sport"><option value="all">All sports</option></select>
+  </div>
+  <div class="ctl">
+    <label>Synthetic margin <b id="marginV">5.0%</b></label>
+    <input type="range" id="margin" min="0" max="12" step="0.5" value="5">
+  </div>
+  <div class="ctl">
+    <label>Kelly fraction <b id="kellyV">25%</b></label>
+    <input type="range" id="kelly" min="5" max="100" step="5" value="25">
+  </div>
+  <div class="ctl">
+    <label>Min edge to flag <b id="minV">0.0%</b></label>
+    <input type="range" id="minedge" min="0" max="8" step="0.25" value="0">
+  </div>
+  <div class="ctl" style="min-width:110px">
+    <label>Refresh <b id="ivV">6s</b></label>
+    <input type="range" id="iv" min="3" max="30" step="1" value="6">
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="board" id="board"></div>
+  <div class="side">
+    <div class="panel">
+      <h3>Paper blotter</h3>
+      <div class="sub">Take a price; CLV tracks it against live fair value.</div>
+      <div class="blot" id="blot"><div class="empty">No positions taken yet.</div></div>
+      <div class="tot"><span>positions <b id="posN">0</b></span>
+        <span>avg CLV <b id="avgClv">—</b></span></div>
+      <div style="margin-top:11px"><button class="btn" id="clearBlot">clear blotter</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <span class="mono">What this is —</span> a quantitative <span class="note">fair-value ("synthetic") book</span>
+  built from the devigged consensus of real bookmakers. The engine's offered prices are shown beside the
+  best real market price; positive edge means the market is paying over fair. This is an internal
+  fair-value sheet for traders, <span class="note">not a book offered to customers</span>, and every number
+  is re-priced live in your browser from the same maths as the tested Python core
+  (<span class="mono">core/</span> + <span class="mono">feed/</span>, 34 tests).<br>
+  <span class="mono">Models —</span> Shin (1992) devig · consensus aggregation · Kelly (1956) staking · CLV.
+  &nbsp;<span class="mono">Educational and illustrative only. Not betting or financial advice.
+  Gamble responsibly — in Australia, Gambling Help Online 1800 858 858.</span>
+</div>
+
+<script>
+/* ---- maths mirrored from feed/book.py + core (client-side re-pricing) ---- */
+const M = {
+  synthOdds:(p,margin)=> p>0 ? 1/(p*(1+margin)) : Infinity,
+  edge:(p,o)=> o>1 ? p*o-1 : -1,
+  kelly:(p,o,frac)=>{const b=o-1; if(b<=0)return 0; return Math.max(0,(p*o-1)/b)*frac;}
+};
+const $=id=>document.getElementById(id);
+const pct=x=>(x*100).toFixed(1)+'%';
+const sgn=x=>(x>=0?'+':'')+(x*100).toFixed(1)+'%';
+const od=x=>isFinite(x)?x.toFixed(2):'—';
+
+let BOARD=[], CFG={margin:0.05,kelly:0.25,min:0.0}, positions=[];
+let timer=null;
+
+/* ---- data load: live /api/board first, static snapshot.json fallback ---- */
+async function load(){
+  let snap=null;
+  try{ const r=await fetch('/api/board',{cache:'no-store'}); if(r.ok) snap=await r.json(); }catch(e){}
+  if(!snap || snap.error){
+    try{ const r=await fetch('snapshot.json',{cache:'no-store'}); if(r.ok) snap=await r.json(); }catch(e){}
+  }
+  if(!snap){ $('board').innerHTML='<div class="empty">No data. Run the snapshot tool or the dev server.</div>'; return; }
+  BOARD=snap.board||[];
+  const live=!!snap.live;
+  const b=$('srcBadge'); b.textContent=live?'LIVE':'MOCK'; b.className='badge '+(live?'live':'mock');
+  $('liveDot').className=live?'dot':'';
+  $('updated').textContent=new Date(snap.generated_at).toLocaleTimeString();
+  populateSports();
+  render();
+}
+
+function populateSports(){
+  const sel=$('sport'), cur=sel.value;
+  const sports=[...new Set(BOARD.map(e=>e.sport_title))].sort();
+  sel.innerHTML='<option value="all">All sports</option>'+
+    sports.map(s=>`<option value="${s}">${s}</option>`).join('');
+  sel.value=[...sel.options].some(o=>o.value===cur)?cur:'all';
+}
+
+function countdown(iso){
+  const d=(new Date(iso)-new Date())/1000;
+  if(d<0) return 'in play';
+  const h=Math.floor(d/3600), m=Math.floor((d%3600)/60);
+  return h>0?`${h}h ${m}m`:`${m}m`;
+}
+
+/* ---- render the board: synthetic book vs market, client re-priced ---- */
+function render(){
+  const filt=$('sport').value, host=$('board'); host.innerHTML='';
+  let shownEvents=0, totalEdges=0;
+  for(const ev of BOARD){
+    if(filt!=='all' && ev.sport_title!==filt) continue;
+    // re-price every selection client-side from consensus prob + best market price
+    const sels=ev.selections.map(s=>{
+      const offered=M.synthOdds(s.prob, CFG.margin);
+      const fair=M.synthOdds(s.prob, 0);
+      const e=M.edge(s.prob, s.best_price);
+      const k=e>0?M.kelly(s.prob, s.best_price, CFG.kelly):0;
+      return {...s, offered, fair_odds:fair, edge:e, kelly:k};
+    });
+    const edges=sels.filter(s=>s.edge>CFG.min);
+    totalEdges+=edges.length; shownEvents++;
+    const best=Math.max(...sels.map(s=>s.edge));
+    const hot=best>CFG.min && best>0;
+
+    const card=document.createElement('div');
+    card.className='card'+(hot?' hot':'');
+    const rows=sels.map(s=>{
+      const isPos=s.edge>CFG.min && s.edge>0;
+      const taken=positions.some(p=>p.id===ev.id && p.name===s.name);
+      return `<tr class="${isPos?'pos':''}">
+        <td class="l">${s.name}</td>
+        <td class="fair">${od(s.fair_odds)}</td>
+        <td class="offered">${od(s.offered)}</td>
+        <td class="market">${od(s.best_price)}<span class="sm" style="color:var(--faint)"> ${s.best_book||''}</span></td>
+        <td class="edge ${isPos?'p':'n'}">${sgn(s.edge)}</td>
+        <td>${s.kelly>0?pct(s.kelly):'·'}</td>
+        <td><button class="take ${taken?'on':''}" data-id="${ev.id}" data-nm="${encodeURIComponent(s.name)}">${taken?'taken':'take'}</button></td>
+      </tr>`;
+    }).join('');
+    card.innerHTML=`
+      <div class="head">
+        <span class="sport">${ev.sport_title}</span>
+        <span class="match">${ev.label}</span>
+        <span class="meta"><span>${countdown(ev.commence_time)} · ${ev.n_books} books</span>
+          ${hot?`<span class="edge-tag">best edge ${sgn(best)}</span>`:`<span>no edge</span>`}</span>
+      </div>
+      <table>
+        <thead><tr><th class="l">Selection</th><th>Fair</th><th>Book*</th><th>Market</th><th>Edge</th><th>Kelly</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    host.appendChild(card);
+  }
+  $('nEvents').textContent=shownEvents;
+  $('nEdges').textContent=totalEdges;
+  // wire take buttons
+  host.querySelectorAll('.take').forEach(btn=>btn.onclick=()=>{
+    takePosition(btn.dataset.id, decodeURIComponent(btn.dataset.nm));
+  });
+  renderBlotter();
+}
+
+/* ---- paper blotter: CLV vs live fair value ---- */
+function findSel(id,name){
+  const ev=BOARD.find(e=>e.id===id); if(!ev) return null;
+  return ev.selections.find(s=>s.name===name)||null;
+}
+function takePosition(id,name){
+  const i=positions.findIndex(p=>p.id===id && p.name===name);
+  if(i>=0){ positions.splice(i,1); render(); return; }     // toggle off
+  const s=findSel(id,name); if(!s) return;
+  const ev=BOARD.find(e=>e.id===id);
+  positions.push({id,name,label:ev.label,
+    taken:s.best_price, takenProb:s.prob,
+    entryEdge:M.edge(s.prob,s.best_price)});
+  render();
+}
+function renderBlotter(){
+  const host=$('blot');
+  if(!positions.length){ host.innerHTML='<div class="empty">No positions taken yet.</div>';
+    $('posN').textContent='0'; $('avgClv').textContent='—'; return; }
+  let clvs=[];
+  host.innerHTML=positions.map(p=>{
+    const s=findSel(p.id,p.name);
+    const fairNow=s?M.synthOdds(s.prob,0):null;          // current fair odds
+    const clv=fairNow? p.taken/fairNow-1 : 0;            // beating where fair sits now
+    clvs.push(clv);
+    return `<div class="row">
+      <div><div class="nm">${p.name}</div>
+        <div class="sm">${p.label} · took ${p.taken.toFixed(2)} · entry edge ${sgn(p.entryEdge)}</div></div>
+      <div class="clv ${clv>=0?'p':'n'}">${sgn(clv)}<div class="sm" style="color:var(--faint);text-align:right">CLV vs fair</div></div>
+    </div>`;
+  }).join('');
+  $('posN').textContent=positions.length;
+  const avg=clvs.reduce((a,b)=>a+b,0)/clvs.length;
+  const el=$('avgClv'); el.textContent=sgn(avg); el.style.color=avg>=0?'var(--pos)':'var(--neg)';
+}
+
+/* ---- controls ---- */
+function bindRange(id, vid, fmt, set){
+  const r=$(id); const upd=()=>{ $(vid).textContent=fmt(+r.value); set(+r.value); render(); };
+  r.oninput=upd; upd();
+}
+bindRange('margin','marginV',v=>v.toFixed(1)+'%',v=>CFG.margin=v/100);
+bindRange('kelly','kellyV',v=>v+'%',v=>CFG.kelly=v/100);
+bindRange('minedge','minV',v=>v.toFixed(2)+'%',v=>CFG.min=v/100);
+$('sport').onchange=render;
+$('clearBlot').onclick=()=>{ positions=[]; render(); };
+$('refresh').onclick=load;
+
+function schedule(){
+  if(timer) clearInterval(timer);
+  const s=+$('iv').value; $('ivV').textContent=s+'s';
+  if($('auto').checked) timer=setInterval(load, s*1000);
+}
+$('iv').oninput=()=>{ $('ivV').textContent=$('iv').value+'s'; schedule(); };
+$('auto').onchange=schedule;
+
+load(); schedule();
+</script>
